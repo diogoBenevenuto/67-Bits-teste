@@ -5,14 +5,20 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     private CharacterController controller;
+    private Animator anim;
 
     [Header("Config Player")]
     public float movementSpeed = 3f;
     
     private Vector3 direction;
+    private bool IsWalk;
+
+    [Header("Camera")]
+    public GameObject camB;
     void Start()
     {
        controller = GetComponent<CharacterController>();
+       anim = GetComponent<Animator>();
     }
 
     void Update()
@@ -26,8 +32,35 @@ public class PlayerController : MonoBehaviour
             //calculo do angulo que estou  me movendo (em radiano) e na '*' esta convertendoo radiano para graus
             float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
             transform.rotation = Quaternion.Euler(0, targetAngle, 0);
+            IsWalk = true;
+        
+        }
+        else
+        {
+            IsWalk = false;
         }
 
         controller.Move(direction * movementSpeed * Time.deltaTime);
+        anim.SetBool("IsWalk", IsWalk);
+    }
+
+// ---------- Controle da Camera para focar dinamica ---------------
+    private void OnTriggerEnter(Collider other)
+    {
+        switch(other.gameObject.tag)
+        {
+            case "CamTrigger":
+                camB.SetActive(true);
+                break;
+        }
+    }
+    private void OnTriggerExit(Collider other) 
+    {
+        switch(other.gameObject.tag)
+        {
+            case "CamTrigger":
+                camB.SetActive(false);
+                break;
+        }
     }
 }
