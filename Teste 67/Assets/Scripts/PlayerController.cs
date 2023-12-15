@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    public FixedJoystick moveJoystick;
     private CharacterController controller;
     private Animator anim;
 
@@ -23,8 +24,14 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        /* -- Movimentação inicical que fiz uzando o teclado--
+
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
+        */
+
+        float horizontal = moveJoystick.Horizontal;
+        float vertical = moveJoystick.Vertical;
 
         direction = new Vector3(horizontal, 0f, vertical).normalized;
         if(direction.magnitude > 0.1f)
@@ -44,7 +51,7 @@ public class PlayerController : MonoBehaviour
         anim.SetBool("IsWalk", IsWalk);
     }
 
-// ---------- Controle da Camera para focar dinamica ---------------
+// ---------- Controle da Camera para focar dinamicamente ---------------
     private void OnTriggerEnter(Collider other)
     {
         switch(other.gameObject.tag)
